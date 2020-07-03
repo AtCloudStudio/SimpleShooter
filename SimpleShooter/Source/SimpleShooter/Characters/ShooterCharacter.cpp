@@ -1,12 +1,13 @@
 // Copyright @CloudStudio 2020
 
 #include "ShooterCharacter.h"
-#include "GameFramework/SpringArmComponent.h"
+#include "SimpleShooter/Actors/GunBase.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 AShooterCharacter::AShooterCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
     SpringArm->SetupAttachment(RootComponent);
@@ -18,6 +19,14 @@ AShooterCharacter::AShooterCharacter()
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Hide original weapon skeletal mesh
+	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+
+	// Spawn custom weapon, attach it to Mesh component, and set its owner to the character
+	Gun = GetWorld()->SpawnActor<AGunBase>(Weapon);
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+	Gun->SetOwner(this);
 }
 
 void AShooterCharacter::Tick(float DeltaTime)
@@ -32,7 +41,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(TEXT("Move Right"), this, &ThisClass::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("Look Up"), this, &ThisClass::LookUp);
 	PlayerInputComponent->BindAxis(TEXT("Look Right"), this, &ThisClass::LookRight);
-	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &ThisClass::Shoot);
 }
 
 void AShooterCharacter::MoveForward(float AxisValue) 
@@ -53,4 +63,11 @@ void AShooterCharacter::LookUp(float AxisValue)
 void AShooterCharacter::LookRight(float AxisValue) 
 {
 	AddControllerYawInput(AxisValue * RotateSpeed * GetWorld()->GetDeltaSeconds());
+}
+
+void AShooterCharacter::Shoot() 
+{
+	if (!ensure(Gun)) return;
+
+	Gun->TriggerPulled();
 }

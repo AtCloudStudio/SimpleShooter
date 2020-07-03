@@ -6,8 +6,9 @@
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
 
-class USpringArmComponent;
+class AGunBase;
 class UCameraComponent;
+class USpringArmComponent;
 
 UCLASS()
 class SIMPLESHOOTER_API AShooterCharacter : public ACharacter
@@ -32,10 +33,17 @@ private:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float RotateSpeed = 100.0f;
 
+	// Weapon
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AGunBase> Weapon;
+
+	AGunBase* Gun;
+
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 	void LookUp(float AxisValue);
 	void LookRight(float AxisValue);
+	void Shoot();
 
 protected:
 	virtual void BeginPlay() override;
