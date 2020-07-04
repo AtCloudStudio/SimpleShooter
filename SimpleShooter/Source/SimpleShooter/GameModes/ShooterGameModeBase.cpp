@@ -1,7 +1,8 @@
 // Copyright @CloudStudio 2020
 
 #include "ShooterGameModeBase.h"
-#include "SimpleShooter/Characters/ShooterCharacter.h"
+#include "SimpleShooter/Characters/EnemyShooter.h"
+#include "SimpleShooter/Characters/PlayerShooter.h"
 #include "SimpleShooter/PlayerControllers/PlayerControllerBase.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -9,8 +10,7 @@ void AShooterGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Get references and set variables
-	Player = Cast<AShooterCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+	Player = Cast<APlayerShooter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	PlayerControllerReference = 
         Cast<APlayerControllerBase>(UGameplayStatics::GetPlayerController(this, 0));
 
@@ -21,12 +21,17 @@ void AShooterGameModeBase::ActorDied(AActor* DeadActor)
 {
 	if (DeadActor == Player)
 	{
-		//TODO Player->CharacterDestroyed();
+		Player->CharacterDied();
 		HandleGameOver(false);
 
 		if (!ensure(PlayerControllerReference)) return;
 
 		PlayerControllerReference->SetPlayerEnabledState(false);
+	}
+	else if (AEnemyShooter* DeadEnemy = Cast<AEnemyShooter>(DeadActor))
+	{
+		DeadEnemy->CharacterDied();
+		// TODO Disable enemy
 	}
 }
 

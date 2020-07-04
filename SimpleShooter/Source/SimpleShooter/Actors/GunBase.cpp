@@ -3,7 +3,9 @@
 #include "GunBase.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
-//#include "DrawDebugHelpers.h"
+#include "SimpleShooter/Actors/ProjectileBase.h"
+#include "SimpleShooter/Characters/PlayerShooter.h"
+#include "DrawDebugHelpers.h"
 
 AGunBase::AGunBase()
 {
@@ -14,11 +16,16 @@ AGunBase::AGunBase()
 
 	GunMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Gun Mesh"));
 	GunMesh->SetupAttachment(RootComponent);
+
+	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
+	ProjectileSpawnPoint->SetupAttachment(GunMesh);
 }
 
 void AGunBase::BeginPlay()
 {
 	Super::BeginPlay();	
+
+	Player = Cast<APlayerShooter>(UGameplayStatics::GetPlayerPawn(this, 0));
 }
 
 void AGunBase::Tick(float DeltaTime)
@@ -28,8 +35,41 @@ void AGunBase::Tick(float DeltaTime)
 
 void AGunBase::TriggerPulled() 
 {
+	LaunchProjectile();
 	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, GunMesh, TEXT("MuzzleFlashSocket"));
+	// DrawShootRay();
+}
 
+void AGunBase::LaunchProjectile() 
+{
+	if (!ensure(ProjectileClass)) return;
+
+	AProjectileBase* TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(
+		ProjectileClass, 
+		ProjectileSpawnPoint->GetComponentLocation(), 
+		ProjectileSpawnPoint->GetComponentRotation());
+
+	TempProjectile->SetOwner(Player);
+}
+
+void AGunBase::DrawShootRay()
+{
+	FVector LaunchLocation = ProjectileSpawnPoint->GetComponentLocation(); 
+	FRotator LaunchRotation = ProjectileSpawnPoint->GetComponentRotation();
+
+	FVector TraceEnd = LaunchLocation + LaunchRotation.Vector() * ShootRange;
+	FHitResult OUTHit;
+	ECollisionChannel Bullet = ECC_GameTraceChannel1;
+
+	if (!GetWorld()->LineTraceSingleByChannel(OUTHit, LaunchLocation, TraceEnd, Bullet)) return;
+
+	DrawDebugLine(GetWorld(), LaunchLocation, TraceEnd, FColor::Red, true);
+	DrawDebugPoint(GetWorld(), OUTHit.Location, 10.0f, FColor::Red, true);
+}
+
+// Ray trace from camera, directly apply damage by gun, no projectile spawn
+void AGunBase::CourseOriginalShootImplementation() 
+{
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
 
 	if (!ensure(OwnerPawn)) return;
@@ -54,7 +94,7 @@ void AGunBase::TriggerPulled()
 	UGameplayStatics::
 	ApplyDamage(OUTHit.GetActor(), ShootDamage, OwnerPawn->GetInstigatorController(), this, DamageType);
 
-	// DrawDebugCamera(GetWorld(), OUTLocation, OUTRotation, 90.0f, 2.0f, FColor::Red, true);
-	// DrawDebugLine(GetWorld(), OUTLocation, TraceEnd, FColor::Red, true);
-	// DrawDebugPoint(GetWorld(), OUTHit.Location, 20.0f, FColor::Yellow, true);
+	DrawDebugCamera(GetWorld(), OUTLocation, OUTRotation, 90.0f, 2.0f, FColor::Red, true);
+	DrawDebugLine(GetWorld(), OUTLocation, TraceEnd, FColor::Red, true);
+	DrawDebugPoint(GetWorld(), OUTHit.Location, 10.0f, FColor::Red, true);
 }

@@ -1,8 +1,8 @@
 // Copyright @CloudStudio 2020
 
 #include "HealthComponent.h"
-#include "SimpleShooter/GameModes/ShooterGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "SimpleShooter/GameModes/ShooterGameModeBase.h"
 
 UHealthComponent::UHealthComponent()
 {
@@ -16,38 +16,24 @@ void UHealthComponent::BeginPlay()
 	Health = MaxHealth;
 	GameModeReference = Cast<AShooterGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
-	if (!ensure(GetOwner())) return;
+	Owner = GetOwner();
 
-	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
+	if (!ensure(Owner)) return;
+
+	Owner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
 }
 
-void UHealthComponent::TakeDamage(AActor* DamagedActor, 
-		float Damage, 
-		const class UDamageType* DamageType, 
-		class AController* InstigatedBy, 
-		AActor* DamageCauser) 
+void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser) 
 {
 	if (Damage == 0 || Health == 0) return;
 
 	Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);
 
-	UE_LOG(LogTemp, Warning, TEXT("%s Health: %f"), *GetOwner()->GetName(), Health);
-
 	if (Health <= 0)
 	{
 		if (!ensure(GameModeReference)) return;
 
-		GameModeReference->ActorDied(GetOwner());
-		UE_LOG(LogTemp, Warning, TEXT("%s died!"), *GetOwner()->GetName());
+		GameModeReference->ActorDied(Owner);
 	}
-}
-
-bool UHealthComponent::IsCharacterDead() const
-{
-	return Health <= 0;
-}
-
-void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	UE_LOG(LogTemp, Warning, TEXT("%s Health: %f"), *Owner->GetName(), Health);
 }

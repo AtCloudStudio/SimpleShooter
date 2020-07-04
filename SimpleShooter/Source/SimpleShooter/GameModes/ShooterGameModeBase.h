@@ -6,7 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "ShooterGameModeBase.generated.h"
 
-class AShooterCharacter;
+class AEnemyShooter;
+class APlayerShooter;
 class APlayerControllerBase;
 
 UCLASS()
@@ -23,8 +24,11 @@ public:
 	void ActorDied(AActor* DeadActor);
 
 private:
-	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Player", meta = (AllowPrivateAccess = "true"))
-	AShooterCharacter* Player;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Characters", meta = (AllowPrivateAccess = "true"))
+	APlayerShooter* Player;
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Characters", meta = (AllowPrivateAccess = "true"))
+	AEnemyShooter* Enemy;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Game Loop", meta = (AllowPrivateAccess = "true"))
 	int32 StartDelay = 4;

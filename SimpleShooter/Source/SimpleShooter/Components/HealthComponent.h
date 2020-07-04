@@ -15,27 +15,18 @@ class SIMPLESHOOTER_API UHealthComponent : public UActorComponent
 
 public:	
 	UHealthComponent();
-	virtual void TickComponent(
-		float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UFUNCTION(BlueprintPure)
-	bool IsCharacterDead() const;
 
 private:	
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Health", meta = (AllowPrivateAccess = "true"))
 	float MaxHealth = 100.0f;
 	float Health = 0.0f;
 
+	AActor* Owner;
 	AShooterGameModeBase* GameModeReference;
 	
 protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void TakeDamage(
-		AActor* DamagedActor, 
-		float Damage, 
-		const class UDamageType* DamageType, 
-		class AController* InstigatedBy, 
-		AActor* DamageCauser);
+	void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 };

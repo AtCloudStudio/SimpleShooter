@@ -6,9 +6,8 @@
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
 
-class AGunBase;
-class UCameraComponent;
-class USpringArmComponent;
+class AProjectileBase;
+class UHealthComponent;
 
 UCLASS()
 class SIMPLESHOOTER_API AShooterCharacter : public ACharacter
@@ -18,33 +17,41 @@ class SIMPLESHOOTER_API AShooterCharacter : public ACharacter
 public:
 	AShooterCharacter();
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void CharacterDied();
+	
+	UFUNCTION(BlueprintPure)
+	bool IsCharacterDead();
 
 private:
 	// Components
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* SpringArm;
+	USkeletalMeshComponent* GunMesh;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* ThirdPersonCamera;
+	USceneComponent* ProjectileSpawnPoint;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UHealthComponent* HealthComponent;
 
-	// Movement
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	float MoveSpeed = 100.0f;
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	float RotateSpeed = 100.0f;
+	// Shoot
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Shoot", meta = (AllowPrivateAccess = "true"))
+	float ShootRange = 30000.0f;
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Shoot", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AProjectileBase> ProjectileClass;
 
-	// Weapon
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AGunBase> Weapon;
+	// Effects
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Effects", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* MuzzleFlash;
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Effects", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* HitEffect;
 
-	AGunBase* Gun;
+	// Effects
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Effects", meta = (AllowPrivateAccess = "true"))
+	USoundBase* DeathSound;
 
-	void MoveForward(float AxisValue);
-	void MoveRight(float AxisValue);
-	void LookUp(float AxisValue);
-	void LookRight(float AxisValue);
-	void Shoot();
+	bool bIsDead;
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void HandleDeath();
+	void Shoot();
 };

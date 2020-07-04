@@ -1,7 +1,10 @@
 {
 	"files.exclude": {
+		"E:/Ryan/Unreal Project/SimpleShooter/SimpleShooter/.vs": true,
 		"E:/Ryan/Unreal Project/SimpleShooter/SimpleShooter/.vscode": true,
 		"E:/Ryan/Unreal Project/SimpleShooter/SimpleShooter/Content": true,
-		"E:/Ryan/Unreal Project/SimpleShooter/SimpleShooter/Intermediate": true
+		"E:/Ryan/Unreal Project/SimpleShooter/SimpleShooter/DerivedDataCache": true,
+		"E:/Ryan/Unreal Project/SimpleShooter/SimpleShooter/Intermediate": true,
+		"E:/Ryan/Unreal Project/SimpleShooter/SimpleShooter/Saved": true
 	}
 }

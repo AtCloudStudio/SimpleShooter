@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "GunBase.generated.h"
 
+class APlayerShooter;
+class AProjectileBase;
+
 UCLASS()
 class SIMPLESHOOTER_API AGunBase : public AActor
 {
@@ -23,6 +26,8 @@ private:
 	USceneComponent* GunRoot;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* GunMesh;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* ProjectileSpawnPoint;
 
 	// Shoot
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Shoot", meta = (AllowPrivateAccess = "true"))
@@ -31,12 +36,20 @@ private:
 	TSubclassOf<UDamageType> DamageType;
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Shoot", meta = (AllowPrivateAccess = "true"))
 	float ShootDamage = 10.0f;
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Shoot", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AProjectileBase> ProjectileClass;
 
 	// Effects
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Effects", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* MuzzleFlash;
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Effects", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* HitEffect;
+
+	APlayerShooter* Player;
+
+	void LaunchProjectile();
+	void DrawShootRay();
+	void CourseOriginalShootImplementation();
 
 protected:
 	virtual void BeginPlay() override;

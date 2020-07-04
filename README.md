@@ -31,4 +31,9 @@ You're welcome to download and do whatever legal with all these files. Please fe
 * Created new Player Controller C++ class PlayerControllerBase
 * Created new Game Mode C++ class ShooterGameModeBase and its derived blueprint class BP_GameMode
 * Added character dead animation
-* Tried to trigger character death, bugged
+* Tried to trigger character death animation, bugged
+
+### Day 03
+* Code refactored, whole game architecture rebuilt
+* Created new C++ Actor class ProjectileBase and its derived blueprint class BP_Projectile
+* Implemented character movement system, shooting system, character health system, and death trigger
