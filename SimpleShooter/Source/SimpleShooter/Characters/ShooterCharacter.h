@@ -17,11 +17,12 @@ class SIMPLESHOOTER_API AShooterCharacter : public ACharacter
 public:
 	AShooterCharacter();
 	virtual void Tick(float DeltaTime) override;
-
-	void CharacterDied();
 	
 	UFUNCTION(BlueprintPure)
 	bool IsCharacterDead();
+
+	void CharacterDied();
+	void Shoot();
 
 private:
 	// Components
@@ -53,5 +54,4 @@ private:
 protected:
 	virtual void BeginPlay() override;
 	virtual void HandleDeath();
-	void Shoot();
 };

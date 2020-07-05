@@ -35,5 +35,16 @@ You're welcome to download and do whatever legal with all these files. Please fe
 
 ### Day 03
 * Code refactored, whole game architecture rebuilt
+* Abandoned the Gun system, as a component, directly attached guns to character mesh instead 
+* Created C++ derived classes PlayerShooter and EnemyShooter based on ShooterCharacter
+* Created new blueprints based on the above classes: BP_PlayerShooter and BP_EnemyShooter
 * Created new C++ Actor class ProjectileBase and its derived blueprint class BP_Projectile
 * Implemented character movement system, shooting system, character health system, and death trigger
+
+### Day 04
+* Created new C++ AIController class AIContorllerBase and its derived blueprint class BP_ShooterAIController, and applied it to BP_EnemyShooter
+* Created Behavior Tree BT_EnemyAI and Blackboard BB_EnemyAI, linked and applied them to BP_ShooterAIController 
+* Created new C++ BTTask_BlackboardBase class BTTask_ClearBlackboardValue
+* Created new C++ BTTaskNode class  BTTask_Shoot
+* Created new C++ BTService_BlackboardBase class BTService_UpdatePlayerLocation and its derived C++ class BTService_PlayerLocationIfSeen
+

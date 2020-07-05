@@ -12,21 +12,15 @@ AEnemyShooter::AEnemyShooter()
 void AEnemyShooter::BeginPlay() 
 {
     Super::BeginPlay();
-    
-    GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this, 
-        &AEnemyShooter::CheckFireCondition, FireRate, true, false);
-
-    Player = Cast<APlayerShooter>(UGameplayStatics::GetPlayerPawn(this, 0));
 }
 
-void AEnemyShooter::CheckFireCondition() 
+void AEnemyShooter::HandleDeath() 
 {
-    if (!ensure(Player) || Player->IsCharacterDead()) return;
+    Super::HandleDeath();
 
-    if ((Player->GetActorLocation() - GetActorLocation()).Size() <= FireRange)
-    {
-        Shoot();
-    }
+    // TODO surely disable enemy 
+    // Remove enemy collision
+    // Stop enemy chasing player
 }
 
 void AEnemyShooter::Tick(float DeltaTime)

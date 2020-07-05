@@ -17,19 +17,7 @@ public:
 	AEnemyShooter();
 	virtual void Tick(float DeltaTime) override;
 
-private:
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	float FireRate = 2.0f;
-
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	float FireRange = 1000.0f;
-
-	FTimerHandle FireRateTimerHandle;
-
-	APlayerShooter* Player;
-
-	void CheckFireCondition();
-
 protected:
 	virtual void BeginPlay() override;
+	virtual void HandleDeath() override;
 };
