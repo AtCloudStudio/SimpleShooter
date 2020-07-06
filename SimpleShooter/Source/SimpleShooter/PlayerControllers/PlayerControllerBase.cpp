@@ -4,6 +4,8 @@
 
 void APlayerControllerBase::SetPlayerEnabledState(bool bSetPlayerEnabled)
 {
+	if (!ensure(GetPawn())) return;
+	
 	if (bSetPlayerEnabled)
 	{
 		GetPawn()->EnableInput(this);

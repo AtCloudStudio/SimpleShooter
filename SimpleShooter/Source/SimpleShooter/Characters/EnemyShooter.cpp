@@ -18,9 +18,7 @@ void AEnemyShooter::HandleDeath()
 {
     Super::HandleDeath();
 
-    // TODO surely disable enemy 
-    // Remove enemy collision
-    // Stop enemy chasing player
+    GetController()->Destroy();
 }
 
 void AEnemyShooter::Tick(float DeltaTime)

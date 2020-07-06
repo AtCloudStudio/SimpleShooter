@@ -48,3 +48,10 @@ You're welcome to download and do whatever legal with all these files. Please fe
 * Created new C++ BTTaskNode class  BTTask_Shoot
 * Created new C++ BTService_BlackboardBase class BTService_UpdatePlayerLocation and its derived C++ class BTService_PlayerLocationIfSeen
 
+### Day 05
+* Roughly completed AI system
+* Created new widget blueprint class WBP_LoseScreen
+* Created new widget blueprint class WBP_VictoryScreen
+* Created new widget blueprit class WBP_StartScreen
+* Created new level MainMenu
+* Created new widget blueprint class WBP_MainMenu

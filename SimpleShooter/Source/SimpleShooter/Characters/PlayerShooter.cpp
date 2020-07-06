@@ -54,6 +54,5 @@ void APlayerShooter::HandleDeath()
 {
     Super::HandleDeath();
 
-    SetActorHiddenInGame(true);
-    SetActorTickEnabled(false);
+	// TODO Added player death effect
 }

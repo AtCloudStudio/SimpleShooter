@@ -3,6 +3,7 @@
 #include "ShooterCharacter.h"
 #include "SimpleShooter/Actors/ProjectileBase.h"
 #include "SimpleShooter/Components/HealthComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -29,10 +30,26 @@ void AShooterCharacter::BeginPlay()
 	bIsDead = false;
 }
 
+void AShooterCharacter::Shoot() 
+{
+	if (!ensure(MuzzleFlash || GunMesh || ProjectileClass || ProjectileSpawnPoint)) return;
+
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, GunMesh, TEXT("MuzzleFlashSocket"));
+	// GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(LaunchShake, 1.0f);
+
+	AProjectileBase* TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(
+		ProjectileClass, 
+		ProjectileSpawnPoint->GetComponentLocation(), 
+		ProjectileSpawnPoint->GetComponentRotation());
+
+	TempProjectile->SetOwner(this);
+}
+
 void AShooterCharacter::HandleDeath() 
 {
 	bIsDead = true;
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AShooterCharacter::CharacterDied()
@@ -43,18 +60,6 @@ void AShooterCharacter::CharacterDied()
 bool AShooterCharacter::IsCharacterDead() 
 {
     return bIsDead;
-}
-
-void AShooterCharacter::Shoot() 
-{
-	if (!ensure(ProjectileClass)) return;
-
-	AProjectileBase* TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(
-		ProjectileClass, 
-		ProjectileSpawnPoint->GetComponentLocation(), 
-		ProjectileSpawnPoint->GetComponentRotation());
-
-	TempProjectile->SetOwner(this);
 }
 
 void AShooterCharacter::Tick(float DeltaTime) 

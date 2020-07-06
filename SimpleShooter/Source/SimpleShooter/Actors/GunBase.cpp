@@ -83,9 +83,14 @@ void AGunBase::CourseOriginalShootImplementation()
 	FVector InShotDirection = -OUTRotation.Vector();
 	FHitResult OUTHit;
 	ECollisionChannel Bullet = ECC_GameTraceChannel1;// Custom trace channel 1
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(GetOwner());
 
-	if (!GetWorld()->LineTraceSingleByChannel(OUTHit, OUTLocation, TraceEnd, Bullet)) return;
+	if (!GetWorld()->LineTraceSingleByChannel(OUTHit, OUTLocation, TraceEnd, Bullet, Params)) return;
 
+	if (!ensure(HitEffect)) return;
+	
 	UGameplayStatics::
 	SpawnEmitterAtLocation(GetWorld(), HitEffect, OUTHit.Location, InShotDirection.Rotation());
 

@@ -18,6 +18,7 @@ class SIMPLESHOOTER_API AShooterGameModeBase : public AGameModeBase
 public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameStart();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameOver(bool PlayerWon);
 
@@ -27,15 +28,20 @@ private:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Characters", meta = (AllowPrivateAccess = "true"))
 	APlayerShooter* Player;
 
-	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Characters", meta = (AllowPrivateAccess = "true"))
-	AEnemyShooter* Enemy;
-
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Game Loop", meta = (AllowPrivateAccess = "true"))
 	int32 StartDelay = 4;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Game Loop", meta = (AllowPrivateAccess = "true"))
+	int32 GameRestartDelay = 5;
+
+	int32 TargetEnemies = 0;
+
 	APlayerControllerBase* PlayerControllerReference;
 
+	int32 GetTargetEnemiesCount();
+
 	void HandleGameStart();
+	
 	void HandleGameOver(bool PlayerWon);
 	
 protected:

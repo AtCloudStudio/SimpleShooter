@@ -5,16 +5,25 @@
 #include "SimpleShooter/Characters/PlayerShooter.h"
 #include "SimpleShooter/PlayerControllers/PlayerControllerBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 void AShooterGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
 	Player = Cast<APlayerShooter>(UGameplayStatics::GetPlayerPawn(this, 0));
-	PlayerControllerReference = 
-        Cast<APlayerControllerBase>(UGameplayStatics::GetPlayerController(this, 0));
+	TargetEnemies = GetTargetEnemiesCount();
+	PlayerControllerReference = Cast<APlayerControllerBase>(UGameplayStatics::GetPlayerController(this, 0));
 
 	HandleGameStart();
+}
+
+int32 AShooterGameModeBase::GetTargetEnemiesCount() 
+{
+	TArray<AActor*> Enemy;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyShooter::StaticClass(), Enemy);
+
+	return Enemy.Num();
 }
 
 void AShooterGameModeBase::ActorDied(AActor* DeadActor)
@@ -31,7 +40,12 @@ void AShooterGameModeBase::ActorDied(AActor* DeadActor)
 	else if (AEnemyShooter* DeadEnemy = Cast<AEnemyShooter>(DeadActor))
 	{
 		DeadEnemy->CharacterDied();
-		// TODO Disable enemy
+		TargetEnemies--;
+
+		if (TargetEnemies == 0)
+		{
+			HandleGameOver(true);
+		}
 	}
 }
 
@@ -43,16 +57,25 @@ void AShooterGameModeBase::HandleGameStart()
 
 	PlayerControllerReference->SetPlayerEnabledState(false);
 
-	FTimerHandle PlayerEnablehandle;
-	GetWorld()->GetTimerManager().SetTimer(
-		PlayerEnablehandle, 
-		FTimerDelegate::
-            CreateUObject(PlayerControllerReference, &APlayerControllerBase::SetPlayerEnabledState, true), 
+	FTimerHandle PlayerEnableTimer;
+	GetWorldTimerManager().SetTimer(
+		PlayerEnableTimer, 
+		FTimerDelegate::CreateUObject(PlayerControllerReference, &APlayerControllerBase::SetPlayerEnabledState, true), 
 		StartDelay, 
 		false);
 }
 
-void AShooterGameModeBase::HandleGameOver(bool PlayerWon)
+void AShooterGameModeBase::HandleGameOver(bool bPlayerWon)
 {
-	GameOver(PlayerWon);
+	GameOver(bPlayerWon);
+
+	if (!bPlayerWon)
+	{
+		FTimerHandle GameRestartTimer;
+		GetWorldTimerManager().SetTimer(
+		GameRestartTimer, 
+		PlayerControllerReference, 
+		&APlayerControllerBase::RestartLevel, 
+		GameRestartDelay);
+	}
 }
