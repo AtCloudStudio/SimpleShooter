@@ -24,6 +24,8 @@ public:
 
 	void CharacterDied();
 
+	FHitResult& Aim(FHitResult& Hit);
+
 	void Shoot();
 
 private:

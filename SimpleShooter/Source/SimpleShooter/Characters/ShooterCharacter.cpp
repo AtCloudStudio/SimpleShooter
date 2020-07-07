@@ -30,6 +30,18 @@ void AShooterCharacter::BeginPlay()
 	bIsDead = false;
 }
 
+FHitResult& AShooterCharacter::Aim(FHitResult& OUTHit) 
+{
+	FVector AimingLocation = ProjectileSpawnPoint->GetComponentLocation();
+	FRotator AimingRotation = ProjectileSpawnPoint->GetComponentRotation();
+	FVector TraceEnd = AimingLocation + AimingRotation.Vector() * ShootRange;
+	FCollisionQueryParams TraceParams;
+	TraceParams.AddIgnoredActor(this);
+	GetWorld()->LineTraceSingleByChannel(OUTHit, AimingLocation, TraceEnd, ECollisionChannel::ECC_GameTraceChannel1, TraceParams);
+
+	return OUTHit;
+}
+
 void AShooterCharacter::Shoot() 
 {
 	if (!ensure(MuzzleFlash || GunMesh || ProjectileClass || ProjectileSpawnPoint)) return;

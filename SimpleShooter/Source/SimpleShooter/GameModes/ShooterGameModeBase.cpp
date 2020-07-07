@@ -32,10 +32,6 @@ void AShooterGameModeBase::ActorDied(AActor* DeadActor)
 	{
 		Player->CharacterDied();
 		HandleGameOver(false);
-
-		if (!ensure(PlayerControllerReference)) return;
-
-		PlayerControllerReference->SetPlayerEnabledState(false);
 	}
 	else if (AEnemyShooter* DeadEnemy = Cast<AEnemyShooter>(DeadActor))
 	{
@@ -55,7 +51,7 @@ void AShooterGameModeBase::HandleGameStart()
 
 	if (!ensure(PlayerControllerReference)) return;
 
-	PlayerControllerReference->SetPlayerEnabledState(false);
+	PlayerControllerReference->GetPawn()->DisableInput(PlayerControllerReference);
 
 	FTimerHandle PlayerEnableTimer;
 	GetWorldTimerManager().SetTimer(
@@ -68,6 +64,10 @@ void AShooterGameModeBase::HandleGameStart()
 void AShooterGameModeBase::HandleGameOver(bool bPlayerWon)
 {
 	GameOver(bPlayerWon);
+
+	if (!ensure(PlayerControllerReference)) return;
+
+	PlayerControllerReference->SetPlayerEnabledState(false);
 
 	if (!bPlayerWon)
 	{

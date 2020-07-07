@@ -55,3 +55,10 @@ You're welcome to download and do whatever legal with all these files. Please fe
 * Created new widget blueprit class WBP_StartScreen
 * Created new level MainMenu
 * Created new widget blueprint class WBP_MainMenu
+
+### Day 06
+* Created new widget blueprint class WBP_PasueMenu
+* Created new sound cue SC_RifleShoot and SC_RifleImpactConcrete
+* Created new sound attenuation SoundAttenuation_Default
+* Created new widget blueprint class WBP_HUD
+* Many bugs need to fix

@@ -13,4 +13,23 @@ class SIMPLESHOOTER_API APlayerControllerBase : public APlayerController
 
 public:
 	void SetPlayerEnabledState(bool bIsPlayerEnabled);
+
+	UFUNCTION(BlueprintCallable)
+	void ShowPauseMenu();
+
+	UFUNCTION(BlueprintCallable)
+	void ClosePauseMenu();
+
+private:
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "User Widget", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UUserWidget> HUDClass;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "User Widget", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UUserWidget> PauseMenuClass;
+
+	UUserWidget* HUD;
+	UUserWidget* PauseMenu;
+
+protected:
+	virtual void BeginPlay() override;
 };
