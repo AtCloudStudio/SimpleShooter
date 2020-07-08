@@ -6,41 +6,54 @@
 void APlayerControllerBase::BeginPlay() 
 {
 	Super::BeginPlay();
-
-	HUD = CreateWidget(this, HUDClass);
-	PauseMenu = CreateWidget(this, PauseMenuClass);
 }
 
 void APlayerControllerBase::SetPlayerEnabledState(bool bSetPlayerEnabled)
 {
-	if (!ensure(GetPawn())) return;
-	
+	if (!GetPawn()) return;
+
 	if (bSetPlayerEnabled)
 	{
 		GetPawn()->EnableInput(this);
-		HUD->AddToViewport();
 	}
 	else
 	{
 		GetPawn()->DisableInput(this);
-		HUD->SetVisibility(ESlateVisibility::Hidden);
 	}
+}
+
+void APlayerControllerBase::ShowHUD()
+{
+	HUD = CreateWidget(this, HUDClass);
+
+	if (!ensure(HUD)) return;
+
+	HUD->AddToViewport();
+}
+
+void APlayerControllerBase::HideHUD()
+{
+	if (!ensure(HUD)) return;
+
+	HUD->RemoveFromParent();
 }
 
 void APlayerControllerBase::ShowPauseMenu() 
 {
-	if (!ensure(HUD || PauseMenu)) return;
+	PauseMenu = CreateWidget(this, PauseMenuClass);
 
-	HUD->SetVisibility(ESlateVisibility::Hidden);
+	if (!ensure(PauseMenu || HUD)) return;
+
 	SetPause(true);
 	PauseMenu->AddToViewport();
 	SetInputMode(FInputModeGameAndUI());
 	bShowMouseCursor = true;
+	HUD->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void APlayerControllerBase::ClosePauseMenu() 
 {
-	if (!ensure(HUD || PauseMenu)) return;
+	if (!ensure(PauseMenu || HUD)) return;
 	
 	SetPause(false);
 	PauseMenu->RemoveFromParent();

@@ -16,12 +16,23 @@ class SIMPLESHOOTER_API UHealthComponent : public UActorComponent
 public:	
 	UHealthComponent();
 
+	UFUNCTION(BlueprintPure)
+	float GetHealth();
+
+	UFUNCTION(BlueprintPure)
+	float GetMaxHealth();
+
+	UFUNCTION(BlueprintPure)
+	float GetHealthPercentage();
+
 private:	
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Health", meta = (AllowPrivateAccess = "true"))
 	float MaxHealth = 100.0f;
+
 	float Health = 0.0f;
 
 	AActor* Owner;
+
 	AShooterGameModeBase* GameModeReference;
 	
 protected:

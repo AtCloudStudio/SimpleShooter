@@ -20,12 +20,10 @@ void UBTService_PlayerLocationIfSeen::TickNode(UBehaviorTreeComponent& OwnerComp
 
     if (OwnerComp.GetAIOwner()->LineOfSightTo(PlayerPawn))
     {
-        OwnerComp.GetAIOwner()->SetFocus(PlayerPawn);
-        OwnerComp.GetBlackboardComponent()->SetValueAsVector(GetSelectedBlackboardKey(), PlayerPawn->GetActorLocation());
+        OwnerComp.GetBlackboardComponent()->SetValueAsObject(GetSelectedBlackboardKey(), PlayerPawn);
     }
     else 
     {
-        OwnerComp.GetAIOwner()->ClearFocus(EAIFocusPriority::LastFocusPriority);
         OwnerComp.GetBlackboardComponent()->ClearValue(GetSelectedBlackboardKey());
     }
 }

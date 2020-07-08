@@ -35,5 +35,19 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 
 		GameModeReference->ActorDied(Owner);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("%s Health: %f"), *Owner->GetName(), Health);
+}
+
+float UHealthComponent::GetHealth()
+{
+	return Health;
+}
+
+float UHealthComponent::GetMaxHealth()
+{
+	return MaxHealth;
+}
+
+float UHealthComponent::GetHealthPercentage()
+{
+	return Health / MaxHealth;
 }

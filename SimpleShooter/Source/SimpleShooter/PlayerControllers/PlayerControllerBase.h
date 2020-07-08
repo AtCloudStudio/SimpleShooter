@@ -20,14 +20,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ClosePauseMenu();
 
+	UFUNCTION(BlueprintCallable)
+	void ShowHUD();
+
+	void HideHUD();
+
 private:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "User Widget", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UUserWidget> HUDClass;
-
+	
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "User Widget", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UUserWidget> PauseMenuClass;
-
+	
 	UUserWidget* HUD;
+
 	UUserWidget* PauseMenu;
 
 protected:

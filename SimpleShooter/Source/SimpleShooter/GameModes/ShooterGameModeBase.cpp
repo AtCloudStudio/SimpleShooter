@@ -51,7 +51,7 @@ void AShooterGameModeBase::HandleGameStart()
 
 	if (!ensure(PlayerControllerReference)) return;
 
-	PlayerControllerReference->GetPawn()->DisableInput(PlayerControllerReference);
+	PlayerControllerReference->SetPlayerEnabledState(false);
 
 	FTimerHandle PlayerEnableTimer;
 	GetWorldTimerManager().SetTimer(
@@ -67,6 +67,7 @@ void AShooterGameModeBase::HandleGameOver(bool bPlayerWon)
 
 	if (!ensure(PlayerControllerReference)) return;
 
+	PlayerControllerReference->HideHUD();
 	PlayerControllerReference->SetPlayerEnabledState(false);
 
 	if (!bPlayerWon)

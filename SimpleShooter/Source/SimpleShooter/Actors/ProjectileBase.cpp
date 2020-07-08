@@ -52,7 +52,6 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, TempOwner->GetInstigatorController(), this, DamageType);
 		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation(), FRotator::ZeroRotator);
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
-		// UE_LOG(LogTemp, Warning, TEXT("%s hit %s"), *TempOwner->GetName(), *OtherActor->GetName());
 	}
 	
 	Destroy();

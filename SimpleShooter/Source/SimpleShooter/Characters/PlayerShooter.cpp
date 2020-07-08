@@ -53,6 +53,4 @@ void APlayerShooter::LookRight(float AxisValue)
 void APlayerShooter::HandleDeath() 
 {
     Super::HandleDeath();
-
-	// TODO Added player death effect
 }

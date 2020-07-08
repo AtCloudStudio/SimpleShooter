@@ -62,3 +62,11 @@ You're welcome to download and do whatever legal with all these files. Please fe
 * Created new sound attenuation SoundAttenuation_Default
 * Created new widget blueprint class WBP_HUD
 * Many bugs need to fix
+
+### Day 07
+* Implemented player health display
+* Created new widget blueprint WBP_EnemyHealthBar and added it to BP_EnemyShooter
+* Added jump animation
+* Added background music
+* Fixed some but there are still a lot  of bugs 
+* End course section
